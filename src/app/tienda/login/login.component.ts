@@ -32,10 +32,14 @@ export class LoginComponent implements OnInit {
 
   login(content: TemplateRef<any>) {
     this.sessionService.login(this.userObj).subscribe((res) => {
-      sessionStorage.setItem('token', res.access_token)
-      console.log(res)
-      this.modal_info.title = "Sesión iniciada";
-      this.modal_info.body = "Bienvenido! " + this.userObj.username;
+      if (!res.error) {
+        sessionStorage.setItem('token', res.access_token)
+        this.modal_info.title = "Sesión iniciada";
+        this.modal_info.body = "Bienvenido! " + this.userObj.username;
+      } else {
+        this.modal_info.title = "Error de autenticación!";
+        this.modal_info.body = res.message;
+      }
     });
     this.openSm(content);
   }
